@@ -1,0 +1,88 @@
+# Reference Material
+#
+# * https://www.podcast.co/create/podcast-rss-feeds
+
+[podcast]
+title = "Verbose Title Name"
+description = "Verbose description of the podcast."
+website = "https://example.com/podcast"
+language = "en-us"
+copyright = "2020"
+webmaster = "webmaster@example.com (Webmaster)"
+managing-editor = "maned@example.com (Managing Editor)"
+formats = [
+    "flac",
+    "mp3",
+    "m4a",
+]
+hosting-base-url = "https://example.com/podcast/files/"
+
+[podcast.logo]
+url = "https://example.com/podcast/logo.png"
+
+# TODO - default to podcast settings?
+title = "Logo Title"
+
+# TODO - default to podcast settings?
+link = "https://example.com/podcast"
+
+[podcast.itunes]
+keywords = [
+    "separate",
+    "by",
+    "comma",
+    "and",
+    "space",
+]
+explicit = false
+
+# TODO: Default to podcast?
+image = "https://example.com/podcast/logo.png"
+author = "Web Master"
+summary = "Duplicate of <description>."
+subtitle = "Short description of the podcast - 255 character max."
+
+[podcast.itunes.owner]
+name = "Web Master"
+email = "webmaster@example.com"
+
+[podcast.itunes.category]
+
+# TODO: What's up with this nested stuff?
+# <itunes:category text="Education">
+#    <itunes:category text="Higher Education" />
+# </itunes:category>
+
+text = "Education"
+
+# TODO: These need to be outputs, not inputs
+#
+# <atom:link href="https://www.YourSite.com/feed.xml" rel="self" type="application/rss+xml" />
+# <pubDate>Fri, 05 Oct 2018 09:00:00 GMT</pubDate>
+# <lastBuildDate>Fri, 05 Oct 2018 09:00:00 GMT</lastBuildDate>
+
+[[episodes]]
+title = "Verbose title of the episode"
+description = "Verbose description of the episode."
+subtitle = "Short description of the episode - 255 character max.<"
+itunesu-category = "????"
+files = [
+    "1970-01-01-episode-xxx-subject.flac",
+    "1970-01-01-episode-xxx-subject.mp3",
+    "1970-01-01-episode-xxx-subject.m4a",
+]
+duration = "H:MM:SS"
+publish-date = "Fri, 05 Oct 2018 09:00:00 GMT"
+
+[[episodes]]
+title = "Verbose title of the episode 2"
+description = "Verbose description of the episode 2."
+subtitle = "Short description 2 of the episode - 255 character max.<"
+itunesu-category = "????"
+files = [
+    "1970-01-02-episode-xxx-subject.flac",
+    "1970-01-02-episode-xxx-subject.mp3",
+    "1970-01-02-episode-xxx-subject.m4a",
+]
+duration = "H:MM:SS"
+publish-date = "Fri, 05 Oct 2018 09:00:00 GMT"

@@ -8,5 +8,9 @@ edition = "2018"
 
 [dependencies]
 toml = "0.5.8"
-serde = "1.0.118"
 chrono = "0.4.19"
+rss = "1.0"
+
+[dependencies.serde]
+version = "1.0.118"
+features = ["derive"]

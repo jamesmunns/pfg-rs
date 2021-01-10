@@ -1,6 +1,6 @@
 [package]
 name = "pfg"
-version = "0.1.0"
+version = "0.2.0"
 description = "A Podcast Feed Generator"
 repository = "https://github.com/jamesmunns/bbqueue"
 authors = ["James Munns <james.munns@ferrous-systems.com>"]

@@ -11,7 +11,6 @@ copyright = "2020"
 webmaster = "webmaster@example.com (Webmaster)"
 managing-editor = "maned@example.com (Managing Editor)"
 
-# TODO: Derive these from webmaster?
 author = "Web Master"
 author-email = "webmaster@example.com"
 
@@ -44,14 +43,10 @@ link = "https://example.com/podcast"
 
 
 
-# TODO: These need to be outputs, not inputs
-#
-# <atom:link href="https://www.YourSite.com/feed.xml" rel="self" type="application/rss+xml" />
-# <pubDate>Fri, 05 Oct 2018 09:00:00 GMT</pubDate>
-# <lastBuildDate>Fri, 05 Oct 2018 09:00:00 GMT</lastBuildDate>
 
 [[episodes]]
 title = "Verbose title of the episode"
+url = "https://example.com/podcast/episode-1-guest/"
 description = "Verbose description of the episode."
 subtitle = "Short description of the episode - 255 character max.<"
 files = [
@@ -59,7 +54,7 @@ files = [
     "1970-01-01-episode-xxx-subject.mp3",
     "1970-01-01-episode-xxx-subject.m4a",
 ]
-duration = "H:MM:SS"
+duration = "HH:MM:SS"
 publish-date = "Fri, 05 Oct 2018 09:00:00 GMT"
 keywords = [
 

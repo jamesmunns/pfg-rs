@@ -71,6 +71,7 @@ struct ItunesCategory {
 #[serde(rename_all = "kebab-case", deny_unknown_fields)]
 struct Episode {
     title: String,
+    url: String,
     description: String,
     subtitle: String,
     files: Vec<String>,
@@ -90,8 +91,12 @@ fn main() {
     let xmls = generate_xmls(podcast).unwrap();
 
     for (format, data) in xmls.iter() {
-        println!("{}", data.to_string());
-        println!("{}", format);
+        let filename = format!("podcast-feed-{}.xml", format);
+        println!("Writing '{}'...", &filename);
+
+        let mut file = File::create(&filename).unwrap();
+        file.write_all(data.to_string().as_bytes()).unwrap();
+
     }
 
 }
@@ -243,12 +248,14 @@ fn generate_xmls(pod: Podcast) -> Result<HashMap<String, Channel>, ()> {
         itunes_item.set_author(Some(pod.author.clone()));
         // itunes_item.set_block();
         itunes_item.set_image(Some(pod.logo.url.clone()));
-        itunes_item.set_duration(Some("00:00:00".into())); // lol
+        itunes_item.set_duration(Some(episode.duration)); // lol
         itunes_item.set_explicit(Some(if pod.explicit {
             "Explicit"
         } else {
             "Clean"
         }.to_string()));
+        itunes_item.set_summary(episode.description.clone());
+        itunes_item.set_subtitle(episode.subtitle.clone());
         itunes_item.set_keywords(episode.keywords.join(", "));
 
 
@@ -299,7 +306,7 @@ fn generate_xmls(pod: Podcast) -> Result<HashMap<String, Channel>, ()> {
 
 
                     let mut this_item = base_item.clone();
-                    this_item.link(full_path.clone());
+                    this_item.link(episode.url.clone());
                     this_item.enclosure(encl);
 
 
@@ -321,6 +328,7 @@ fn generate_xmls(pod: Podcast) -> Result<HashMap<String, Channel>, ()> {
 
     for (ext, items) in item_map.drain() {
         let mut this_builder = base_builder.clone();
+        println!("{:#?}", items);
         this_builder.items(items);
         map.insert(ext.to_string(), this_builder.build().unwrap());
     }

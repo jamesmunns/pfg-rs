@@ -1,22 +1,14 @@
-use rss::Enclosure;
-use rss::Guid;
-use rss::Image;
-use rss::Item;
-use rss::extension::itunes::ITunesCategory;
-use rss::extension::itunes::ITunesItemExtension;
-use rss::extension::itunes::ITunesOwner;
-use serde::{Deserialize, Serialize};
-use toml;
 use rss::{
-    ChannelBuilder,
-    Channel,
-    ItemBuilder,
-    extension::itunes::ITunesChannelExtension,
+    extension::itunes::{ITunesCategory, ITunesChannelExtension, ITunesItemExtension, ITunesOwner},
+    Channel, ChannelBuilder, Enclosure, Guid, Image, Item, ItemBuilder,
 };
+use serde::{Deserialize, Serialize};
 
-use std::fs::File;
-use std::io::prelude::*;
-use std::collections::{HashMap, HashSet};
+use std::{
+    collections::{HashMap, HashSet},
+    fs::File,
+    io::prelude::*,
+};
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case", deny_unknown_fields)]
@@ -96,71 +88,8 @@ fn main() {
 
         let mut file = File::create(&filename).unwrap();
         file.write_all(data.to_string().as_bytes()).unwrap();
-
     }
-
 }
-
-// // NOTE: Returns map of "media format":"xml contents"
-// fn generate_xmls(pod: &Podcast) -> Result<HashMap<String, String>, ()> {
-//     let formats = pod.formats.clone();
-//     let mut file_map = HashMap::new();
-
-//     for format in formats {
-//         let mut content_vec = vec![];
-//         // TODO, generate!
-
-//         // Podcast Body
-
-//         // Fixed Header
-
-//         content_vec.push(r#"<?xml version="1.0" encoding="utf-8"?>"#.to_string());
-//         content_vec.push(r#"<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:itunesu="http://www.itunesu.com/feed" version="2.0">"#.to_string());
-//         content_vec.push(r#"<channel>"#.to_string());
-
-//         // Actual content
-
-//         content_vec.push(format!(r#"<link>https://www.YourSite.com</link>"#));
-//         content_vec.push(format!(r#"<language>en-us</language>"#));
-//         content_vec.push(format!(r#"<copyright>&#xA9;2018</copyright>"#));
-//         content_vec.push(format!(r#"<webMaster>your@email.com (Your Name)</webMaster>"#));
-//         content_vec.push(format!(r#"<managingEditor>your@email.com (Your Name)</managingEditor>"#));
-//         content_vec.push(format!(r#"<image>"#));
-//         content_vec.push(format!(r#"   <url>https://www.YourSite.com/ImageSize300X300.jpg</url>"#));
-//         content_vec.push(format!(r#"   <title>Title of your logo</title>"#));
-//         content_vec.push(format!(r#"   <link>https://www.YourSite.com</link>"#));
-//         content_vec.push(format!(r#"</image>"#));
-//         content_vec.push(format!(r#"<itunes:owner>"#));
-//         content_vec.push(format!(r#"   <itunes:name>Your Name</itunes:name>"#));
-//         content_vec.push(format!(r#"   <itunes:email>your@email.com</itunes:email>"#));
-//         content_vec.push(format!(r#"</itunes:owner>"#));
-//         content_vec.push(format!(r#"<itunes:category text="Education">"#));
-//         content_vec.push(format!(r#"   <itunes:category text="Higher Education" />"#));
-//         content_vec.push(format!(r#"</itunes:category>"#));
-//         content_vec.push(format!(r#"<itunes:keywords>separate, by, comma, and, space</itunes:keywords>"#));
-//         content_vec.push(format!(r#"<itunes:explicit>no</itunes:explicit>"#));
-//         content_vec.push(format!(r#"<itunes:image href="http://www.YourSite.com/ImageSize300X300.jpg" />"#));
-//         content_vec.push(format!(r#"<atom:link href="https://www.YourSite.com/feed.xml" rel="self" type="application/rss+xml" />"#));
-//         content_vec.push(format!(r#"<pubDate>Fri, 05 Oct 2018 09:00:00 GMT</pubDate>"#));
-//         content_vec.push(format!(r#"<title>Verbose title of the podcast</title>"#));
-//         content_vec.push(format!(r#"<itunes:author>College, school, or department owning the podcast</itunes:author>"#));
-//         content_vec.push(format!(r#"<description>Verbose description of the podcast.</description>"#));
-//         content_vec.push(format!(r#"<itunes:summary>Duplicate of above verbose description.</itunes:summary>"#));
-//         content_vec.push(format!(r#"<itunes:subtitle>Short description of the podcast - 255 character max.</itunes:subtitle>"#));
-//         content_vec.push(format!(r#"<lastBuildDate>Fri, 05 Oct 2018 09:00:00 GMT</lastBuildDate>"#));
-
-//         // Episodes
-
-//         // Podcast Footer
-//         content_vec.push(r#"</channel>"#.to_string());
-//         content_vec.push(r#"</rss>"#.to_string());
-
-//         // END GENERATE
-//         file_map.insert(format.to_string(), content_vec.join("\n"));
-//     }
-
-//     Ok(file_map)
-// }
 
 fn generate_xmls(pod: Podcast) -> Result<HashMap<String, Channel>, ()> {
     let mut cb = ChannelBuilder::default();
@@ -177,13 +106,9 @@ fn generate_xmls(pod: Podcast) -> Result<HashMap<String, Channel>, ()> {
     itunes.set_author(pod.author.clone());
     itunes.set_categories(vec![itunes_category]);
     itunes.set_image(pod.logo.url.clone());
-    itunes.set_explicit(
-        Some(if pod.explicit {
-            "Explicit"
-        } else {
-            "Clean"
-        }.to_string())
-    );
+    itunes.set_explicit(Some(
+        if pod.explicit { "Explicit" } else { "Clean" }.to_string(),
+    ));
 
     itunes.set_owner(itunes_owner);
     itunes.set_subtitle(pod.subtitle);
@@ -197,7 +122,10 @@ fn generate_xmls(pod: Podcast) -> Result<HashMap<String, Channel>, ()> {
     let mut namespaces: HashMap<String, String> = HashMap::new();
 
     namespaces.insert("atom".into(), "http://www.w3.org/2005/Atom".into());
-    namespaces.insert("itunes".into(), "http://www.itunes.com/dtds/podcast-1.0.dtd".into());
+    namespaces.insert(
+        "itunes".into(),
+        "http://www.itunes.com/dtds/podcast-1.0.dtd".into(),
+    );
     namespaces.insert("itunesu".into(), "http://www.itunesu.com/feed".into());
 
     let mut image = Image::default();
@@ -206,36 +134,34 @@ fn generate_xmls(pod: Podcast) -> Result<HashMap<String, Channel>, ()> {
     image.set_link(pod.website.clone());
 
     // Generate everything EXCEPT the format
-    let base_builder = cb.title(pod.title)
+    let base_builder = cb
+        .title(pod.title)
         .link(pod.website)
         .description(pod.description)
         .language(pod.language)
         .copyright(pod.copyright)
         .managing_editor(pod.managing_editor)
         .webmaster(pod.webmaster)
-        .pub_date(Some("".into()))          // TODO! - This should be RIGHT NOW
-        .last_build_date(Some("".into()))   // TODO! - This should be RIGHT NOW
-
-        .generator(Some("pfg-rs".into()))   // TODO!
-
+        .pub_date(Some("".into())) // TODO! - This should be RIGHT NOW
+        .last_build_date(Some("".into())) // TODO! - This should be RIGHT NOW
+        .generator(Some("pfg-rs".into())) // TODO!
         .image(image)
         .itunes_ext(itunes)
         .namespaces(namespaces);
 
-        // Currently unused items
-        //
-        // .extensions(todo!()) // TODO: This, maybe? Anything other than itunes?
-        // .text_input(todo!())
-        // .skip_hours(todo!())
-        // .skip_days(todo!())
-        // .categories(todo!())
-        // .docs(todo!())
-        // .cloud(todo!())
-        // .rating(todo!())
-        // .ttl(todo!())
-        // .dublin_core_ext(todo!())
-        // .syndication_ext(todo!())
-
+    // Currently unused items
+    //
+    // .extensions(todo!()) // TODO: This, maybe? Anything other than itunes?
+    // .text_input(todo!())
+    // .skip_hours(todo!())
+    // .skip_days(todo!())
+    // .categories(todo!())
+    // .docs(todo!())
+    // .cloud(todo!())
+    // .rating(todo!())
+    // .ttl(todo!())
+    // .dublin_core_ext(todo!())
+    // .syndication_ext(todo!())
 
     let mut map = HashMap::new();
 
@@ -249,15 +175,12 @@ fn generate_xmls(pod: Podcast) -> Result<HashMap<String, Channel>, ()> {
         // itunes_item.set_block();
         itunes_item.set_image(Some(pod.logo.url.clone()));
         itunes_item.set_duration(Some(episode.duration)); // lol
-        itunes_item.set_explicit(Some(if pod.explicit {
-            "Explicit"
-        } else {
-            "Clean"
-        }.to_string()));
+        itunes_item.set_explicit(Some(
+            if pod.explicit { "Explicit" } else { "Clean" }.to_string(),
+        ));
         itunes_item.set_summary(episode.description.clone());
         itunes_item.set_subtitle(episode.subtitle.clone());
         itunes_item.set_keywords(episode.keywords.join(", "));
-
 
         // Make "base" builder
         let mut base_item = ItemBuilder::default();
@@ -276,9 +199,9 @@ fn generate_xmls(pod: Podcast) -> Result<HashMap<String, Channel>, ()> {
             // .dublin_core_ext()
             ;
 
-            // .link() // Do in format
-            // .enclosure() // Do in format?
-            // .guid() // Do in format?
+        // .link() // Do in format
+        // .enclosure() // Do in format?
+        // .guid() // Do in format?
 
         let mut cur_set = base_set.clone();
 
@@ -300,20 +223,22 @@ fn generate_xmls(pod: Podcast) -> Result<HashMap<String, Channel>, ()> {
                         "m4a" => "audio/mp4",
                         "flac" => "audio/flac",
                         _ => "",
-                    }.to_string();
+                    }
+                    .to_string();
 
                     encl.set_mime_type(mime);
-
 
                     let mut this_item = base_item.clone();
                     this_item.link(episode.url.clone());
                     this_item.enclosure(encl);
 
-
                     this_item.guid(Some(guid));
                     cur_set.remove(ext);
 
-                    item_map.entry(ext.to_string()).or_insert_with(|| vec![]).push(this_item.build().unwrap());
+                    item_map
+                        .entry(ext.to_string())
+                        .or_default()
+                        .push(this_item.build().unwrap());
                 }
                 (true, false) => {
                     eprintln!("We've already added a file of format '{}' for episode '{}'. Skipping file '{}' with duplicate format.", ext, episode.title, file)
@@ -323,7 +248,6 @@ fn generate_xmls(pod: Podcast) -> Result<HashMap<String, Channel>, ()> {
                 }
             }
         }
-
     }
 
     for (ext, items) in item_map.drain() {
@@ -332,11 +256,6 @@ fn generate_xmls(pod: Podcast) -> Result<HashMap<String, Channel>, ()> {
         this_builder.items(items);
         map.insert(ext.to_string(), this_builder.build().unwrap());
     }
-    // TODO: Loop over items!
-        // .items(todo!()) // TODO: This
-
-
 
     Ok(map)
-
 }

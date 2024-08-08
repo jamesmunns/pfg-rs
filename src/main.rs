@@ -87,7 +87,9 @@ fn main() {
         println!("Writing '{}'...", &filename);
 
         let mut file = File::create(&filename).unwrap();
-        file.write_all(data.to_string().as_bytes()).unwrap();
+        let unformatted = data.to_string();
+        let formatted = format_xml(unformatted.as_bytes()).unwrap();
+        file.write_all(formatted.as_bytes()).unwrap();
     }
 }
 
@@ -258,4 +260,26 @@ fn generate_xmls(pod: Podcast) -> Result<HashMap<String, Channel>, ()> {
     }
 
     Ok(map)
+}
+
+use xml::{reader::ParserConfig, writer::EmitterConfig};
+
+// https://users.rust-lang.org/t/pretty-printing-xml/76372/3
+fn format_xml(src: &[u8]) -> Result<String, xml::reader::Error> {
+    let mut dest = Vec::new();
+    let reader = ParserConfig::new()
+        .trim_whitespace(true)
+        .ignore_comments(false)
+        .create_reader(src);
+    let mut writer = EmitterConfig::new()
+        .perform_indent(true)
+        .normalize_empty_elements(false)
+        .autopad_comments(false)
+        .create_writer(&mut dest);
+    for event in reader {
+        if let Some(event) = event?.as_writer_event() {
+            writer.write(event).unwrap();
+        }
+    }
+    Ok(String::from_utf8(dest).unwrap())
 }

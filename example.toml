@@ -45,7 +45,7 @@ link = "https://example.com/podcast"
 title = "Verbose title of the episode"
 url = "https://example.com/podcast/episode-1-guest/"
 description = "Verbose description of the episode."
-subtitle = "Short description of the episode - 255 character max.<"
+subtitle = "Short description of the episode - 255 character max."
 files = [
     "1970-01-01-episode-xxx-subject.flac",
     "1970-01-01-episode-xxx-subject.mp3",
@@ -56,12 +56,13 @@ publish-date = "Fri, 05 Oct 2018 09:00:00 GMT"
 keywords = [
 
 ]
+length-bytes = 123456
 
 [[episodes]]
 title = "Verbose title of the episode 2"
 url = "https://example.com/podcast/episode-2-guest/"
 description = "Verbose description of the episode 2."
-subtitle = "Short description 2 of the episode - 255 character max.<"
+subtitle = "Short description 2 of the episode - 255 character max."
 files = [
     "1970-01-02-episode-xxx-subject.flac",
     "1970-01-02-episode-xxx-subject.mp3",
@@ -72,3 +73,5 @@ publish-date = "Fri, 05 Oct 2018 09:00:00 GMT"
 keywords = [
 
 ]
+length-bytes = 234567
+transcript-url = "https://example.com/podcast/transcripts/episode-2-guest.vtt"

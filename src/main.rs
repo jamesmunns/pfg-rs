@@ -5,7 +5,7 @@ use rss::{
 use serde::{Deserialize, Serialize};
 
 use std::{
-    collections::{HashMap, HashSet},
+    collections::{BTreeMap, HashMap, HashSet},
     fs::File,
     io::prelude::*,
 };
@@ -121,7 +121,7 @@ fn generate_xmls(pod: Podcast) -> Result<HashMap<String, Channel>, ()> {
     // itunes.set_new_feed_url();
     // itunes.set_block();
 
-    let mut namespaces: HashMap<String, String> = HashMap::new();
+    let mut namespaces: BTreeMap<String, String> = BTreeMap::new();
 
     namespaces.insert("atom".into(), "http://www.w3.org/2005/Atom".into());
     namespaces.insert(
@@ -240,7 +240,7 @@ fn generate_xmls(pod: Podcast) -> Result<HashMap<String, Channel>, ()> {
                     item_map
                         .entry(ext.to_string())
                         .or_default()
-                        .push(this_item.build().unwrap());
+                        .push(this_item.build());
                 }
                 (true, false) => {
                     eprintln!("We've already added a file of format '{}' for episode '{}'. Skipping file '{}' with duplicate format.", ext, episode.title, file)
@@ -256,7 +256,7 @@ fn generate_xmls(pod: Podcast) -> Result<HashMap<String, Channel>, ()> {
         let mut this_builder = base_builder.clone();
         println!("{:#?}", items);
         this_builder.items(items);
-        map.insert(ext.to_string(), this_builder.build().unwrap());
+        map.insert(ext.to_string(), this_builder.build());
     }
 
     Ok(map)

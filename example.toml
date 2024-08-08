@@ -41,9 +41,6 @@ title = "Logo Title"
 # TODO - default to podcast settings?
 link = "https://example.com/podcast"
 
-
-
-
 [[episodes]]
 title = "Verbose title of the episode"
 url = "https://example.com/podcast/episode-1-guest/"
@@ -62,6 +59,7 @@ keywords = [
 
 [[episodes]]
 title = "Verbose title of the episode 2"
+url = "https://example.com/podcast/episode-2-guest/"
 description = "Verbose description of the episode 2."
 subtitle = "Short description 2 of the episode - 255 character max.<"
 files = [

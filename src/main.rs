@@ -1,3 +1,4 @@
+use chrono::Utc;
 use rss::{
     extension::{
         itunes::{ITunesCategory, ITunesChannelExtension, ITunesItemExtension, ITunesOwner},
@@ -142,8 +143,10 @@ fn generate_xmls(pod: Podcast) -> Result<HashMap<String, Channel>, ()> {
 
     let mut image = Image::default();
     image.set_url(pod.logo.url.clone());
-    image.set_title(format!("{} Logo", &pod.title));
+    image.set_title(&pod.title);
     image.set_link(pod.website.clone());
+
+    let now = Utc::now();
 
     // Generate everything EXCEPT the format
     let base_builder = cb
@@ -154,8 +157,8 @@ fn generate_xmls(pod: Podcast) -> Result<HashMap<String, Channel>, ()> {
         .copyright(pod.copyright)
         .managing_editor(pod.managing_editor)
         .webmaster(pod.webmaster)
-        .pub_date(Some("".into())) // TODO! - This should be RIGHT NOW
-        .last_build_date(Some("".into())) // TODO! - This should be RIGHT NOW
+        .pub_date(Some(now.to_rfc2822()))
+        .last_build_date(Some(now.to_rfc2822()))
         .generator(Some("pfg-rs".into())) // TODO!
         .image(image)
         .itunes_ext(itunes)

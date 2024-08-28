@@ -175,7 +175,7 @@ dependencies = [
 
 [[package]]
 name = "pfg"
-version = "0.5.1"
+version = "0.5.2"
 dependencies = [
  "chrono",
  "rss",

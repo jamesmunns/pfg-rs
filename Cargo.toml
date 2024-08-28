@@ -1,6 +1,6 @@
 [package]
 name = "pfg"
-version = "0.5.0"
+version = "0.5.1"
 description = "A Podcast Feed Generator"
 repository = "https://github.com/jamesmunns/pfg-rs"
 authors = ["James Munns <james@onevariable.com>"]

@@ -189,7 +189,6 @@ fn generate_xmls(pod: Podcast) -> Result<HashMap<String, Channel>, ()> {
         itunes_item.set_explicit(Some(
             if pod.explicit { "true" } else { "false" }.to_string(),
         ));
-        itunes_item.set_summary(episode.description.clone());
         itunes_item.set_subtitle(episode.subtitle.clone());
         itunes_item.set_keywords(episode.keywords.join(", "));
 
